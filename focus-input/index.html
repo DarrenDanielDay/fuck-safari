@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Focus Input</title>
+  </head>
+  <body>
+    <div class="root">
+      <div class="header">
+        <input />
+      </div>
+      <div class="content">See below.</div>
+      <div class="footer">
+        <button>Focus 1</button>
+        <button>Focus 2</button>
+      </div>
+      <div class="hidden" style="color: transparent">Hidden Item</div>
+    </div>
+    <script>
+      var height = window.innerHeight;
+      var input = document.querySelector("input");
+      /** @type {HTMLDivElement} */
+      var content = document.querySelector(".content");
+      /** @type {HTMLDivElement} */
+      var hidden = document.querySelector(".hidden");
+      content.style.height = height + 100 + "px";
+      hidden.style.height = height / 2 + "px";
+
+      var btns = document.querySelectorAll("button");
+      var btn1 = btns[0],
+        btn2 = btns[1];
+
+      function remove() {
+        var parent = hidden.parentElement;
+        if (parent) {
+          parent.removeChild(hidden);
+        }
+      }
+
+      btn1.onclick = function () {
+        remove();
+        input.focus();
+      };
+
+      btn2.onclick = function () {
+        setTimeout(function () {
+          remove();
+          input.focus();
+        }, 1000);
+      };
+    </script>
+  </body>
+</html>
