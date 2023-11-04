@@ -10,25 +10,34 @@
       <div>
         <button onclick="dialog.showModal()">open dialog</button>
       </div>
-      <dialog>
-        <div class="header">Header</div>
-        <select>
-          <option>select widget</option>
-        </select>
-        <div id="content"></div>
-        <div class="footer">
-          <button type="button" id="update">update</button>
-        </div>
-      </dialog>
+      <div id="host"></div>
     </div>
     <script>
-      var content = document.getElementById("content");
-      var updateBtn = document.getElementById("update");
-      var dialog = document.querySelector("dialog");
+      var host = document.getElementById("host");
+      var shadow = host.attachShadow({ mode: "open" });
+      shadow.innerHTML =
+        '\
+      <dialog>\
+        <div class="header">Header</div>\
+        <select>\
+          <option>select widget</option>\
+        </select>\
+        <div id="content">\
+            <slot name="s"></slot>\
+        </div>\
+        <div class="footer">\
+          <button type="button" id="update">update</button>\
+        </div>\
+      </dialog>\
+      ';
+      var dialog = shadow.querySelector("dialog");
+      var updateBtn = shadow.getElementById("update");
       function update() {
         setTimeout(function () {
-          content.innerHTML =
-            "<span>Updated at " + new Date().toLocaleString() + "</span>";
+          host.innerHTML =
+            '<span slot="s">Updated at ' +
+            new Date().toLocaleString() +
+            "</span>";
         }, 300);
       }
       updateBtn.onclick = update;
