@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dialog Content Change</title>
+  </head>
+  <body>
+    <div>
+      <div>
+        <button onclick="dialog.showModal()">open dialog</button>
+      </div>
+      <dialog>
+        <div class="header">Header</div>
+        <select>
+          <option>select widget</option>
+        </select>
+        <div id="content"></div>
+        <div class="footer">
+          <button type="button" id="update">update</button>
+        </div>
+      </dialog>
+    </div>
+    <script>
+      var content = document.getElementById("content");
+      var updateBtn = document.getElementById("update");
+      var dialog = document.querySelector("dialog");
+      function update() {
+        setTimeout(function () {
+          content.innerHTML =
+            "<span>Updated at " + new Date().toLocaleString() + "</span>";
+        }, 300);
+      }
+      updateBtn.onclick = update;
+      update();
+    </script>
+  </body>
+</html>
