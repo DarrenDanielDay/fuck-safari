@@ -10,10 +10,11 @@
       <div>
         <button onclick="dialog.showModal()">open dialog</button>
       </div>
-      <div id="host"></div>
+      <div id="host"><!-- comment --></div>
     </div>
     <script>
       var host = document.getElementById("host");
+      var comment = host.firstChild;
       var shadow = host.attachShadow({ mode: "open" });
       shadow.innerHTML =
         '\
@@ -32,15 +33,27 @@
       ';
       var dialog = shadow.querySelector("dialog");
       var updateBtn = shadow.getElementById("update");
+      var updateSignal = new EventTarget();
       function update() {
         setTimeout(function () {
-          host.innerHTML =
-            '<span slot="s">Updated at ' +
-            new Date().toLocaleString() +
-            "</span>";
+          updateSignal.dispatchEvent(new CustomEvent("update-slot"));
         }, 300);
       }
-      updateBtn.onclick = update;
+      updateSignal.addEventListener("update-slot", function () {
+        var toRemove = [];
+        for (var i = 0; i < host.childNodes.length; i++) {
+          if (i === host.childNodes.length - 1) continue;
+          toRemove.push(host.childNodes[i]);
+        }
+        toRemove.forEach(function (node) {
+          host.removeChild(node);
+        });
+        var span = document.createElement("span");
+        span.setAttribute("slot", "s");
+        span.textContent = "Updated at " + new Date().toLocaleString();
+        host.insertBefore(span, comment);
+      });
+      updateBtn.addEventListener("click", update);
       update();
     </script>
   </body>
