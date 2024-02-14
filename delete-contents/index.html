@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Contents</title>
+  </head>
+
+  <body>
+    <!----><div id="container"><my-element>some content</my-element></div><!---->
+    <button onclick="delete1()">delete1(crash on safari 17)</button>
+    <button onclick="delete2()">delete2(works)</button>
+    <script>
+      class MyElement extends HTMLElement {}
+      MyElement.prototype.connectedCallback = function () {
+        console.log("connected!");
+      };
+      MyElement.prototype.disconnectedCallback = function () {
+        console.log("disconnected!");
+      };
+      customElements.define("my-element", MyElement);
+
+      const container = document.getElementById("container");
+      function delete1() {
+        const range = new Range();
+        range.setStart(container.previousSibling, 0);
+        range.setEnd(container.nextSibling, 0);
+        // The next line works on Google Chrome/Microsoft Edge/FireFox/Safari 16.x,
+        // but crashes on Safari 17.3.1.
+        range.deleteContents();
+        range.detach();
+      }
+      function delete2() {
+        // Works on all browsers.
+        container.parentElement.removeChild(container);
+      }
+    </script>
+  </body>
+</html>
